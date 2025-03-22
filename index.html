@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive View Bookmarklet</title>
+    <style>
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+:root {
+    --primary: #fab387;
+    --primary-dark: #f38ba8;
+    --bg: #1e1e2e;
+    --text: #cdd6f4;
+    --surface: #313244;
+    --border: #6c7086;
+    --mauve: #cba6f7;
+    --peach: #fab387;
+    --yellow: #f9e2af;
+    --green: #a6e3a1;
+    --teal: #94e2d5;
+    --blue: #89b4fa;
+    --lavender: #b4befe;
+}
+
+body {
+    align-items: center;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgba(203,166,247,0.03), rgba(243,139,168,0.03), 
+                rgba(166,227,161,0.03), rgba(137,180,250,0.03), rgba(180,190,254,0.03));
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+}
+
+.particle {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+    0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+}
+
+.container {
+    max-width: 800px;
+    padding: 20px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    color: var(--primary);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.bookmarklet-container {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 20px 0;
+    padding: 20px;
+    text-align: center;
+}
+
+.bookmarklet {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    border-radius: 8px;
+    box-shadow: 0 6px 0 rgba(24,24,37,0.5), 0 8px 10px rgba(17,17,27,0.5),
+                inset 0 1px 1px rgba(255,255,255,0.4), inset 0 -1px 1px rgba(0,0,0,0.1);
+    color: var(--bg);
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    margin: 10px;
+    overflow: hidden;
+    padding: 15px 30px;
+    position: relative;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), 
+                box-shadow 0.3s cubic-bezier(0.2,0.8,0.2,1), 
+                background 0.3s ease;
+}
+
+.bookmarklet::before {
+    animation: rainbow-shine 3s linear infinite;
+    background: linear-gradient(90deg, transparent 0%, rgba(245,194,231,0.2) 15%,
+                rgba(203,166,247,0.2) 30%, rgba(243,139,168,0.2) 45%,
+                rgba(250,179,135,0.2) 60%, rgba(249,226,175,0.2) 75%,
+                rgba(166,227,161,0.2) 90%, transparent 100%);
+    content: "";
+    height: 100%;
+    left: -100%;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.bookmarklet::after {
+    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%,
+                rgba(255,255,255,0.4) 30%, rgba(255,255,255,0.1) 60%, transparent 100%);
+    border-radius: 8px;
+    content: "";
+    height: 180%;
+    left: -40%;
+    pointer-events: none;
+    position: absolute;
+    top: -40%;
+    transition: opacity 0.2s ease;
+    width: 180%;
+    opacity: 0;
+}
+
+.bookmarklet:hover {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    box-shadow: 0 10px 0 rgba(24,24,37,0.5), 0 14px 20px rgba(17,17,27,0.7),
+                inset 0 1px 2px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(0,0,0,0.1);
+    transform: translateY(-4px) scale(1.03);
+}
+
+.bookmarklet:active {
+    box-shadow: 0 2px 0 rgba(24,24,37,0.5), 0 3px 5px rgba(17,17,27,0.4);
+    transform: translateY(4px);
+}
+
+.bookmarklet .cat-emoji {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-left: 8px;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.bookmarklet:hover .cat-emoji {
+    transform: rotate(15deg) scale(1.4);
+}
+
+@keyframes rainbow-shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.instructions {
+    background-color: var(--surface);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    margin: 20px 0;
+    padding: 15px;
+}
+
+.instructions h2 {
+    color: var(--primary);
+    margin-top: 0;
+}
+
+.instructions ol {
+    padding-left: 20px;
+}
+
+footer {
+    color: var(--border);
+    font-size: 0.9rem;
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.sparkle, .micro-sparkle {
+    background-color: white;
+    border-radius: 50%;
+    pointer-events: none;
+    position: absolute;
+}
+
+.sparkle {
+    height: 8px;
+    width: 8px;
+}
+
+.micro-sparkle {
+    height: 2px;
+    width: 2px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Responsive View Bookmarklet</h1>
+        
+        <div class="instructions">
+            <h2>Installation</h2>
+            <p>Drag and drop the bookmarklet below to your bookmarks bar:</p>
+        </div>
+        
+        <div class="bookmarklet-container">
+            <a id="bookmarklet-link" href="#" class="bookmarklet">Responsive View<span class="cat-emoji">🐱</span></a>
+        </div>
+        
+        <div class="instructions">
+            <h2>How to Use</h2>
+            <ol>
+                <li>Visit any website</li>
+                <li>Click the "Responsive View" bookmark in your bookmarks bar</li>
+                <li>Select a device size or enter custom dimensions</li>
+                <li>The website will open in a new window with the selected size</li>
+            </ol>
+        </div>
+    </div>
+    
+    <footer>
+        <p><a href="https://github.com/seanblankenship/responsive-bookmarklet" style="color: var(--primary);">GitHub</a></p>
+    </footer>
+    
+    <script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('bookmarklet.txt.encoded');
+        const bookmarklet = await response.text();
+        document.getElementById('bookmarklet-link').href = bookmarklet;
+    } catch (error) {
+        console.error('Failed to load bookmarklet:', error);
+        document.getElementById('bookmarklet-link').textContent = 'Error loading bookmarklet';
+    }
+    
+    const button = document.getElementById('bookmarklet-link');
+    const colors = ['pink', 'mauve', 'peach', 'yellow', 'green', 'teal', 'blue', 'lavender'];
+    let lastMoveTime = 0;
+    const moveThrottle = 10;
+    
+    // Add holographic effect style once
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+        .bookmarklet::after {
+            opacity: var(--after-opacity, 0);
+            left: var(--after-left, -40%);
+            top: var(--after-top, -40%);
+            transition: opacity 0.3s ease, left 0.1s ease-out, top 0.1s ease-out;
+        }
+        .sparkle.pink, .micro-sparkle.pink { background-color: var(--primary-dark); }
+        .sparkle.mauve, .micro-sparkle.mauve { background-color: var(--mauve); }
+        .sparkle.peach, .micro-sparkle.peach { background-color: var(--peach); }
+        .sparkle.yellow, .micro-sparkle.yellow { background-color: var(--yellow); }
+        .sparkle.green, .micro-sparkle.green { background-color: var(--green); }
+        .sparkle.teal, .micro-sparkle.teal { background-color: var(--teal); }
+        .sparkle.blue, .micro-sparkle.blue { background-color: var(--blue); }
+        .sparkle.lavender, .micro-sparkle.lavender { background-color: var(--lavender); }
+    `;
+    styleTag.id = 'holographic-style';
+    document.head.appendChild(styleTag);
+    
+    // Create particle and sparkle effects
+    function createParticles() {
+        // FIX: Define particle colors properly
+        const particleColors = [
+            'var(--primary-dark)', 
+            'var(--mauve)', 
+            'var(--peach)', 
+            'var(--yellow)', 
+            'var(--green)', 
+            'var(--teal)', 
+            'var(--blue)', 
+            'var(--lavender)'
+        ];
+        const particleCount = 30;
+        let interval;
+        
+        for (let i = 0; i < particleCount; i++) createParticle(i * 100);
+        
+        // Start the interval
+        interval = setInterval(() => createParticle(0), 800);
+        
+        function createParticle(delay) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            const size = Math.random() * 4 + 2;
+            // Get a random color from the array
+            const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+            
+            // Calculate animation duration
+            const duration = Math.random() * 20 + 15;
+            
+            Object.assign(particle.style, {
+                width: `${size}px`,
+                height: `${size}px`,
+                left: `${Math.random() * window.innerWidth}px`,
+                top: '0',
+                opacity: '0',
+                background: color,
+                boxShadow: `0 0 ${Math.floor(size)}px ${color}`,
+                animation: `float ${duration}s ease-in forwards ${delay/1000}s`
+            });
+            
+            document.body.appendChild(particle);
+            
+            // Set timeout to remove the particle after animation completes
+            // FIX: Use the duration we calculated above instead of trying to extract it with regex
+            setTimeout(() => {
+                if (document.body.contains(particle)) {
+                    document.body.removeChild(particle);
+                }
+            }, (duration * 1000) + delay + 500);
+        }
+        
+        return {
+            // FIX: Fixed the redundant pattern in start method
+            start: () => {
+                if (!interval) {
+                    interval = setInterval(() => createParticle(0), 800);
+                }
+                return interval;
+            },
+            stop: () => {
+                if (interval) {
+                    clearInterval(interval);
+                    interval = null;
+                }
+            }
+        };
+    }
+    
+    function createSparkle(e) {
+        const buttonRect = button.getBoundingClientRect();
+        const x = e.clientX - buttonRect.left;
+        const y = e.clientY - buttonRect.top;
+        
+        for (let i = 0; i < 8; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle', colors[Math.floor(Math.random() * colors.length)]);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 30;
+            const size = Math.random() * 6 + 3;
+            
+            sparkle.style.left = `${x + Math.cos(angle) * distance}px`;
+            sparkle.style.top = `${y + Math.sin(angle) * distance}px`;
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.transform = 'scale(0)';
+            sparkle.style.opacity = '0';
+            sparkle.style.transition = 'transform 0.2s ease-out, opacity 0.6s ease-out, top 0.6s ease-out, left 0.6s ease-out';
+            
+            button.appendChild(sparkle);
+            
+            // Use requestAnimationFrame for smooth animation
+            requestAnimationFrame(() => {
+                sparkle.style.transform = 'scale(1)';
+                sparkle.style.opacity = '1';
+                
+                setTimeout(() => {
+                    sparkle.style.top = `${parseFloat(sparkle.style.top) - (Math.random() * 15 + 5)}px`;
+                    sparkle.style.left = `${parseFloat(sparkle.style.left) + (Math.random() - 0.5) * 20}px`;
+                    sparkle.style.opacity = '0';
+                    
+                    // Clean up the DOM by removing the element when animation completes
+                    setTimeout(() => {
+                        if (button.contains(sparkle)) {
+                            sparkle.remove();
+                        }
+                    }, 600);
+                }, 50 + Math.random() * 50);
+            });
+        }
+    }
+    
+    function createMicroSparkleExplosion(e) {
+        const buttonRect = button.getBoundingClientRect();
+        const centerX = e.clientX - buttonRect.left;
+        const centerY = e.clientY - buttonRect.top;
+        
+        for (let i = 0; i < 30; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('micro-sparkle', colors[Math.floor(Math.random() * colors.length)]);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 50 + 20;
+            const speed = 0.5 + Math.random() * 0.5;
+            const size = Math.random() * 2 + 1;
+            
+            sparkle.style.left = `${centerX}px`;
+            sparkle.style.top = `${centerY}px`;
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.opacity = '0.8';
+            
+            button.appendChild(sparkle);
+            
+            const destX = centerX + Math.cos(angle) * distance;
+            const destY = centerY + Math.sin(angle) * distance;
+            
+            const animation = sparkle.animate([
+                { 
+                    transform: 'scale(0)',
+                    left: `${centerX}px`,
+                    top: `${centerY}px`,
+                    opacity: 0.8
+                },
+                {
+                    transform: 'scale(1)',
+                    left: `${destX}px`,
+                    top: `${destY}px`,
+                    opacity: 0
+                }
+            ], {
+                duration: 600 * speed,
+                easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+            });
+            
+            animation.onfinish = () => { 
+                if (button.contains(sparkle)) {
+                    sparkle.remove(); 
+                }
+            };
+        }
+    }
+    
+    // Event listeners
+    button.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastMoveTime < moveThrottle) return;
+        lastMoveTime = now;
+        
+        const buttonRect = button.getBoundingClientRect();
+        const buttonCenterX = buttonRect.width / 2;
+        const buttonCenterY = buttonRect.height / 2;
+        const mouseX = e.clientX - buttonRect.left;
+        const mouseY = e.clientY - buttonRect.top;
+        
+        const rotateX = (buttonCenterY - mouseY) / buttonCenterY * 8;
+        const rotateY = (mouseX - buttonCenterX) / buttonCenterX * 8;
+        
+        if (!button.hasHadMouseMove) {
+            button.hasHadMouseMove = true;
+            button.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            requestAnimationFrame(() => {
+                button.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                setTimeout(() => {
+                    button.style.transition = 'transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                }, 300);
+            });
+        } else {
+            button.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+        
+        button.style.setProperty('--after-opacity', '0.8');
+        button.style.setProperty('--after-left', `calc(${(mouseX / buttonRect.width) * 100}% - 90%)`);
+        button.style.setProperty('--after-top', `calc(${(mouseY / buttonRect.height) * 100}% - 90%)`);
+        
+        if (Math.random() > 0.85) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('micro-sparkle', colors[Math.floor(Math.random() * colors.length)]);
+            
+            Object.assign(sparkle.style, {
+                left: `${mouseX}px`,
+                top: `${mouseY}px`,
+                width: '2px',
+                height: '2px',
+                opacity: '0'
+            });
+            
+            button.appendChild(sparkle);
+            
+            const animation = sparkle.animate([
+                { opacity: 0 },
+                { opacity: 0.7, offset: 0.4 },
+                { opacity: 0 }
+            ], {
+                duration: 600,
+                easing: 'ease-in-out'
+            });
+            
+            animation.onfinish = () => {
+                if (button.contains(sparkle)) {
+                    sparkle.remove();
+                }
+            };
+        }
+    });
+    
+    button.addEventListener('mouseleave', () => {
+        button.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        button.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+        button.style.setProperty('--after-opacity', '0');
+        
+        setTimeout(() => {
+            button.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease';
+        }, 500);
+    });
+    
+    button.addEventListener('click', (e) => {
+        if (button.href === "#") e.preventDefault();
+        
+        button.style.transform = 'perspective(800px) scale(0.95)';
+        setTimeout(() => {
+            button.style.transition = 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            button.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+            setTimeout(() => {
+                button.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            }, 200);
+        }, 150);
+        
+        createSparkle(e);
+        createMicroSparkleExplosion(e);
+    });
+    
+    // Start particles
+    const particles = createParticles();
+    particles.start();
+});
+    </script>
+</body>
+</html>
