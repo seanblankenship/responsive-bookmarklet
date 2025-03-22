@@ -204,11 +204,10 @@
     cursor: pointer;
     display: block;
     font-weight:500;
-    height: 48px;
     margin: var(--space-sm) 0;
     padding: var(--space-md);
     position: relative;
-    text-align:center;
+    text-align:left;
     transition: all var(--animation-fast) ease;
     width: 100%;
 
@@ -266,9 +265,11 @@
     cursor: pointer;
     display: block;
     font-weight: 500;
+    height: 48px;
     margin-top: var(--space-lg);
     padding: var(--space-md);
     position: relative;
+    text-align:center;
     transition: all var(--animation-fast) ease;
     width: 100%;
     &:hover {
