@@ -144,6 +144,7 @@
       height: 32px;
       line-height:1;
       position: relative;
+      text-align:center;
       transition: all var(--animation-fast) ease;
       width: 32px;
 
@@ -202,10 +203,12 @@
     color: var(--ctp-text);
     cursor: pointer;
     display: block;
+    font-weight:500;
+    height: 48px;
     margin: var(--space-sm) 0;
     padding: var(--space-md);
     position: relative;
-    text-align: left;
+    text-align:center;
     transition: all var(--animation-fast) ease;
     width: 100%;
 
@@ -242,6 +245,7 @@
     cursor: pointer;
     flex: 1;
     font-weight: 500;
+    height: 48px;
     padding: var(--space-sm);
     transition: all var(--animation-fast) ease;
     &:hover {
