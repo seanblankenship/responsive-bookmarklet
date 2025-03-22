@@ -64,7 +64,7 @@
 /* Main container styles */
 .rv-container {
   animation: slideIn var(--animation-slower) forwards cubic-bezier(0.16, 1, 0.3, 1);
-  background: rgba(30, 30, 46, 0.5);
+  background: rgba(30, 30, 46, 0.9);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   color: var(--ctp-text);
